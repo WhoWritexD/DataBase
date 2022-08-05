@@ -1,0 +1,45 @@
+import sqlite3
+
+class Comunicacion():
+    def __init__(self):
+        self.conexion = sqlite3.connect('basededatos.db')
+
+    def inserta_usuario(self,codigo,nombre,edad,puesto,numseguro):
+        cursor = self.conexion.cursor()
+        bd = ''' INSERT INTO tabla_datos (CODIGO, NOMBRE, EDAD, PUESTO, NUMSEGURO)
+        VALUES ('{}','{}','{}','{}','{}')'''.format(codigo, nombre, edad, puesto, numseguro)
+        cursor.execute(bd)
+        self.conexion.commit()
+        cursor.close()
+
+    def mostrar_usuario(self):
+        cursor = self.conexion.cursor()
+        bd = "SELECT * FROM tabla_datos"
+        cursor.execute(bd)
+        registro = cursor.fetchall()
+        return registro
+
+    def busca_usuario(self, nombre_usuario):
+        cursor = self.conexion.cursor()
+        bd = '''SELECT * FROM tabla_datos WHERE NOMBRE = {}'''.format(nombre_usuario)
+        cursor.execute(bd)
+        nombreX = cursor.fetchall()
+        cursor.close()
+        return nombreX
+
+    def elimina_usuario(self,nombre):
+        cursor=self.conexion.cursor()
+        bd = '''DELETE  FROM tabla_datos WHERE NOMBRE = {}'''.format(nombre)
+        cursor.execute(bd)
+        self.conexion.commit()
+        cursor.close()
+
+    def actualiza_usuario(self,Id,codigo,nombre,edad,puesto,numseguro):
+        cursor =self.conexion.cursor()
+        bd = '''UPDATE tabla_datos SET CODIGO = '{}', NOMBRE = '{}', EDAD = '{}', PUESTO = '{}', NUMSEGURO = '{}'
+        WHERE ID = '{}' '''.format(codigo,nombre,edad,puesto,numseguro,Id)
+        cursor.execute(bd)
+        a = cursor.rowcount
+        self.conexion.commit()
+        cursor.close()
+        return a
